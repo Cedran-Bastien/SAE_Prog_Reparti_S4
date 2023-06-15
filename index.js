@@ -1,11 +1,11 @@
-var map = L.map('map').setView([51.505, -0.09], 13);
+var map = L.map('map').setView([48.681817, 6.193542], 13);
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 50,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-var marker = L.marker([51.5, -0.09]).addTo(map);
+var marker = L.marker([48.681817, 6.1]).addTo(map);
 
 
 var circle = L.circle([51.508, -0.11], {
@@ -21,7 +21,8 @@ var polygon = L.polygon([
     [51.51, -0.047]
 ]).addTo(map);
 
-marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+marker.bindPopup("<b>Hello world!</b><br>I am a popup.");/*
+.openPopup();*/
 circle.bindPopup("I am a circle.");
 polygon.bindPopup("I am a polygon.");
 
@@ -33,5 +34,16 @@ function onMapClick(e) {
         .setContent("You clicked the map at " + e.latlng.toString())
         .openOn(map);
 }
+
+var markerImage = L.marker([48.681817, 6.2]).addTo(map);
+markerImage.bindPopup(`<img src="./qui.png" style="height : 1000px ; width : auto;">`, {maxWidth : Infinity});
+/*await fetch("https://webetu.iutnc.univ-lorraine.fr/www/canals5/phox/api/photos",{ credentials: 'include'})
+    .then(data => {
+        console.log(data);
+        //markerImage.bindPopup(data)
+    }).catch (error => {
+        console.log(error);
+    })
+    ;*/
 
 map.on('click', onMapClick);
