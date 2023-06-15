@@ -1,0 +1,32 @@
+@startuml
+
+class Proxy{
+}
+
+class Service_BDD{
+}
+
+class Données_Circulation
+
+class Données_Bloqué
+
+class Client
+
+class BDD
+
+
+
+Client -> Données_Circulation : GET
+Client --> Proxy : GET BDD
+Client --> Proxy : GET D_Bloqué
+Proxy -> Données_Bloqué : GET
+Données_Circulation -> Client : reponse
+Données_Bloqué -> Proxy : response
+Proxy -->Client : reponse D_Bloqué
+Proxy ---> Service_BDD
+Service_BDD --> Proxy : reponse(JSON)
+Service_BDD -> BDD
+Proxy ----> Client : response(JSON)
+
+
+@enduml

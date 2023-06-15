@@ -1,0 +1,1 @@
+export const MAP_APP_URL = "https://www.npmjs.com/package/getenv"
