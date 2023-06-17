@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, {useEffect} from "react";
 // import logo from  '../public/logo.png'
 import {useRouter} from "next/navigation";
 import Image from "next/image";
@@ -13,7 +13,7 @@ const Onglet = ({text, route}) => {
     );
 }
 
-const NavMain = ({onglets}) => {
+const Menu = ({onglets}) => {
     const listOnglet = onglets.map((data) => <Onglet key={data.name} text={data.name} route={data.route}  />)
     return (
             <nav className="flex flex-row back bg-cyan-500 gap-2">
@@ -33,7 +33,23 @@ export const Header = () => {
             <div className="bg-cyan-400">
                 {/*<Image className="w-20" src={logo} alt={'logo du site'} />*/}
             </div>
-            <NavMain onglets={listOnglet} />
+            <Menu onglets={listOnglet} />
+        </div>
+    )
+}
+
+function redirectFooter(){
+    const router = useRouter();
+
+    useEffect(() => {
+        router.push("/Home/APropos")
+    }, [router])
+}
+
+export const Footer = ({ButtonText}) => {
+    return (
+        <div className={"bg-cyan-400 absolute bottom-0 text-center min-w-full py-2"}>
+               <p className="hover:bg-cyan-400 hover:rounded duration-500 px-3.5 my-1 py-2.5 cursor-pointer" onClick={redirectFooter} >{ButtonText}</p>
         </div>
     )
 }
