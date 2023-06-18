@@ -2,6 +2,7 @@
 import React, {useEffect, useState} from "react";
 import {usePathname, useRouter} from "next/navigation";
 import Map from '@material-ui/icons/MapOutlined';
+import School from '@material-ui/icons/SchoolOutlined';
 
 const Onglet = ({text, route, icons}) => {
     const [classe, setClasse] = useState("")
@@ -46,6 +47,7 @@ export const Header = () => {
         {
             name: "Travail réalisé",
             route: '/Work',
+            icon: <School/>
         }
     ]
     return (

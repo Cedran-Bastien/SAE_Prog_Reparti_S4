@@ -25,8 +25,8 @@ const RestorantMarker = ({map, id, nom, adresse, lat, lng}) => {
         <Marker position={[lat, lng]} icon={restaurantIcon}>
         <Popup>
             <div className="restaurant" id="${id}">
-                <h3>nom</h3>
-                <p>adresse</p>
+                <h3>{nom}</h3>
+                <p>{adresse}</p>
                 <button onClick={() => {
                     // window.open(`page\\reservation.html?id=${id}`, "_self");
                 }}>Réserver</button>

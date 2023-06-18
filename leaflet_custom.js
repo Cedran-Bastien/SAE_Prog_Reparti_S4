@@ -33,7 +33,6 @@ const displayMarkerVelib = (map, nom, adresse, lat, lng) => {
 <h3>${nom}</h3>
 <p>${adresse}</p>
 `);
-
 }
 
 
