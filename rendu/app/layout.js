@@ -1,9 +1,7 @@
 'use client'
 
-import { Inter } from 'next/font/google'
-import {Header} from "@/app/Home/general";
+import {Footer, Header} from "@/app/general";
 import './globals.css'
-import {useRouter} from "next/navigation";
 
 export default function RootLayout({ children }) {
   return (
@@ -16,10 +14,12 @@ export default function RootLayout({ children }) {
                 crossOrigin=""/>
           <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
                   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-                  crossOrigin=""></script>
+                  crossOrigin="" async={true}></script>
       </head>
       <body>
-        {children}
+      <Header/>
+      {children}
+      {/*<Footer ButtonText={"Notre travail"} />*/}
       </body>
     </html>
   )

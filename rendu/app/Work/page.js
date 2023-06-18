@@ -1,6 +1,6 @@
-import {Home} from "@/app/Home/home";
+import {Work} from "@/app/Work/work";
 import Image from "next/image";
-import Architechture from "../../../public/Architechture.png"
+import Architechture from "../../public/Architechture.png"
 
 export default function rendu() {
     const tab = [
@@ -44,6 +44,6 @@ export default function rendu() {
         }
     ]
     return (
-        <Home tab={tab}/>
+        <Work tab={tab}/>
     )
 }
