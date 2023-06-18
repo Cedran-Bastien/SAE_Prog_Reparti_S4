@@ -1,6 +1,7 @@
-import {Home} from "@/app/Work/work";
-import Image from "next/image";
+import {Map} from "@/app/Home/map";
 
 export default function rendu() {
-    return ( <></>)
+    return (
+        <Map/>
+    )
 }

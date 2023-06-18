@@ -1,20 +1,34 @@
 'use client'
-import React, {useEffect} from "react";
-import {useRouter} from "next/navigation";
-import {MAP_APP_URL} from "@/Const";
+import React, {useEffect, useState} from "react";
+import {usePathname, useRouter} from "next/navigation";
+import Map from '@material-ui/icons/MapOutlined';
 
-const Onglet = ({text, route}) => {
+const Onglet = ({text, route, icons}) => {
+    const [classe, setClasse] = useState("")
+    const path = usePathname()
+    const router = useRouter()
+    useEffect( () => {
+        if (path === route  ) {
+            setClasse("bg-blue-400 text-white")
+        }else {
+            setClasse("hover:bg-amber-50 duration-700")
+        }
+    }, [router, path])
+
     return (
-        <p className="hover:bg-cyan-400 hover:rounded duration-500 px-3.5 my-1 ml-1 py-2.5 cursor-pointer" onClick={route} >{text}</p>
+        <div className={" p-5 cursor-pointer " + classe} onClick={() => {router.push(route)}}>
+            <p>{text}</p>
+            {icons}
+        </div>
+
     );
 }
 
 const Menu = ({onglets}) => {
-    const listOnglet = onglets.map((data) => <Onglet key={data.name} text={data.name} route={data.route}  />)
+    const listOnglet = onglets.map((data) => <Onglet key={data.name} text={data.name} route={data.route} icons={data.icon}  />)
     return (
-            <nav className="flex flex-row back bg-cyan-500 gap-2">
+            <nav className="fixed z-10 bg-cyan-50 flex flex-col w-20 text-center h-full">
                 {listOnglet}
-                <a className="hover:bg-cyan-400 hover:rounded duration-500 px-3.5 my-1 py-2.5 cursor-pointer" href={MAP_APP_URL}> L&apos;application</a>
             </nav>
         )
 
@@ -22,15 +36,20 @@ const Menu = ({onglets}) => {
 
 
 export const Header = () => {
-    const router = useRouter()
-    const listOnglet = [{name : "Home", route: () => {router.push('/Home')}} ,{ name:"Travail réalisé", route: () => {router.push('/Work')}}]
+    const listOnglet = [
+        {
+            name : "Map",
+            route: '/Home',
+            icon: <Map/>
+        },
+
+        {
+            name: "Travail réalisé",
+            route: '/Work',
+        }
+    ]
     return (
-        <div>
-            <div className="bg-cyan-400">
-                {/*<Image className="w-20" src={logo} alt={'logo du site'} />*/}
-            </div>
-            <Menu onglets={listOnglet} />
-        </div>
+        <Menu onglets={listOnglet} />
     )
 }
 
