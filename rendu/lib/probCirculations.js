@@ -1,6 +1,6 @@
 import fetch_proxy from "./fetchproxy.js";
 
-export async function loadInfosRoutieres() {
+export default async function loadInfosRoutieres() {
     let pr = await fetch_proxy("https://carto.g-ny.org/data/cifs/cifs_waze_v2.json");
 
     let data;
@@ -29,4 +29,3 @@ export async function loadInfosRoutieres() {
     return await data;
 }
 
-export default {loadInfosRoutieres: loadInfosRoutieres};

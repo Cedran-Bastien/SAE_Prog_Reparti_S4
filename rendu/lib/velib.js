@@ -1,6 +1,7 @@
 import fetch_proxy from "./fetchproxy.js";
+import {loadInfosRoutieres} from "@/lib/probCirculations";
 
-export async function fetchData (url) {
+async function fetchData (url) {
     const response = await fetch_proxy(url);
     if (response.ok) {
         return await response.json();
@@ -8,7 +9,7 @@ export async function fetchData (url) {
     return null;
 }
 
-export async function loadStationInfo() {
+ export default async function loadStationInfo() {
     let url = "https://transport.data.gouv.fr/gbfs/nancy/station_information.json";
     const dataI = await fetchData(url);
 
@@ -18,7 +19,7 @@ export async function loadStationInfo() {
     return fusion(dataI,dataS);
 }
 
-export async function extractStationInfo(data){
+async function extractStationInfo(data){
     const tabData = data.data.stations;
     return await tabData.map(e =>
         ({
@@ -29,7 +30,7 @@ export async function extractStationInfo(data){
     );
 }
 
-export async function extractStationStatus(data){
+async function extractStationStatus(data){
     const tabData = data.data.stations;
     return await tabData.map((e) =>
         ({
@@ -39,7 +40,7 @@ export async function extractStationStatus(data){
     );
 }
 
-export async function fusion(dataInf,dataStat){
+async function fusion(dataInf,dataStat){
     let tabStationInf = await extractStationInfo(dataInf);
     let tabStationStatus = await extractStationStatus(dataStat);
     let fusionTab = [];
@@ -56,5 +57,6 @@ export async function fusion(dataInf,dataStat){
     }
 
     return fusionTab;
-
 }
+
+

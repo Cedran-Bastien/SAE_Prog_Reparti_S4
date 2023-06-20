@@ -1,6 +1,7 @@
 import leaflet_custom from './lib/leaflet_custom.js';
 import velib from './lib/velib.js';
 import probCirculations from './lib/probCirculations.js';
+import {hostname} from "./rendu/public/const/const";
 
 const map = L.map('map').setView([48.681817, 6.193542], 13);
 
@@ -22,7 +23,7 @@ function onMapClick(e) {
         .setLatLng(e.latlng)
         .setContent(`
 <strong>Ajouter restaurant</strong>
-<form action="" method="get" class="form-example">
+<form method="get" class="form-example">
   <div class="form-example">
     <label for="name">Nom Restaurant: </label>
     <input type="text" name="Nom du restaurant" id="name" required>
@@ -32,7 +33,7 @@ function onMapClick(e) {
     <input type="text" name="Adresse restaurant" id="adress" required>
   </div>
   <div class="form-example">
-    <input type="submit" value="Valider">
+    <input formaction="${hostname}" type="submit" value="Valider">
   </div>
 </form>
 ` )

@@ -1,4 +1,5 @@
 'use client'
+
 import 'leaflet/dist/leaflet.css'
 import {Footer, Header} from "@/app/general";
 import './globals.css'

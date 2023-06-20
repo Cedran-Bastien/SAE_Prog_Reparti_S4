@@ -1,18 +1,144 @@
 'use client'
 
-import {Map} from "@/app/Home/map";
-import {ReservForm} from "@/app/Home/Reservation";
+import {Form, ReservForm} from "@/app/Home/Reservation";
 import {useState} from "react";
+import dynamic from "next/dynamic";
+import dataMeteo from "@/lib/meteo";
+import DateTimePicker from "react-datetime-picker";
+import {hostname} from "@/public/const/const";
 
-export default function rendu() {
+
+export default function Rendu(){
+    const [error, setError] = useState("")
+    const [dateValue, setValue] = useState(new Date())
+    const [freePlace, setFreePlace] = useState(0)
+    const [meteo, setMeteo] = useState("")
+    const [id, setId ] = useState()
+    const [nbPersonne, setNB] = useState(0)
+    const [nom, setNom] = useState("")
+    const [prenom, setPrenom] = useState("")
+    const [tel, setTel] = useState("")
+    const [adresse,setAdresse] = useState("")
+    const [lat,setLta] = useState()
+    const [long, setLong] = useState()
+    const [table, setTable] = useState()
+    const [formCreateVisibility, setCreateVisibility] = useState( " invisible")
+
+
+
+    const reserver = () => {
+        setError("")
+        if (dateValue.getMinutes() !== 0){
+            setError("Minutes must be equal to 00")
+        }
+
+        fetch(hostname+`/db/restaurant/reserver?id_resto=${id}+date=${dateValue /* TODO -> format*/}+heure=${dateValue.getHours()}+personnes=${nbPersonne}+nom=${nom}+prenom=${prenom}+tel=${tel}`,{method: 'POST'}).then((res) => {
+            if (res.status === 200){
+                setText("Reservation Success")
+                setTextVisibility("")
+            }
+
+        })
+    }
+
+
+    //TODO -> rajouter filtre date
+    const updateValue = () => {
+        // fetch(hostname+`/db/restaurants/${id}/reservation/${dateValue.getFullYear()+"-"+dateValue.getMonth()+"-"+dateValue.getDay()}/${dateValue.getHours()}`).then((res) => {
+        //     setFreePlace(res.dispo_table)
+        // })
+        dataMeteo().then((res) => {
+            console.log(res)
+            if (res[2][1] > 0) {
+                setMeteo(`il y aura du soleil, des vents ${res[3][1]} et une temperature de ${res[6][1 ]}`)
+            } else {
+                setMeteo(`il y aura de la pluie, des vents ${res[3][1]} et une temperature de ${res[6][1 ]}`)
+            }
+        })
+    }
+    updateValue()
+
+
     const [formVisibility, setVisibility] = useState(" invisible")
     const [text, setText] = useState("")
     const [textVisibility, setTextVisibility] = useState(" invisible")
+
+    const MapWithNoSSR = dynamic(async () => (await import("../Home/map")).Map, {
+        ssr: false
+    });
+
     return (
         <div>
-            <Map changeVisibility={setVisibility}/>
-            <ReservForm visible={[formVisibility, setVisibility]} snackbar={[setText, setTextVisibility]}/>
-            <p className={"" + textVisibility}>{text}</p>
+            <MapWithNoSSR changeVisibility={setVisibility} createVisibility={setCreateVisibility} setid={setId} setLat={setLta} setLong={setLong}/>
+            <Form>
+                <div className={`flex z-40 flex-col gap-5 bg-cyan-50 right-10 top-10 m-5 p-5 rounded-2xl fixed ${formVisibility}`}>
+                    <p>Reservation </p>
+                    <div className={"inline-block gap-3"}>
+                        <label htmlFor="name">nom : </label>
+                        <input className="border-black border-2" onChange={(event) => {
+                            setNom(event.target.value)
+                        }} type="text" value={nom}/>
+                    </div>
+                    <div className={"inline-block gap-3"}>
+                        <label htmlFor="name">prénom : </label>
+                        <input className="border-black border-2" onChange={(event) => {
+                            setPrenom(event.target.value)
+                        }} type="text" value={prenom}/>
+                    </div>
+                    <div className={"inline-block gap-3"}>
+                        <label htmlFor="name">Telephone : </label>
+                        <input className="border-black border-2" onChange={(event) => {
+                            setPrenom(event.target.value)
+                        }} type="text" value={tel}/>
+                    </div>
+                    <div  className={"inline-block gap-3"}>
+                        <label htmlFor="name">nombre de personnes : </label>
+                        <input className="border-black border-2" onChange={(event) => {
+                            setPrenom(event.target.value)
+                        }} type="number" value={nbPersonne}/>
+                    </div>
+                    <div onChange={updateValue} className={"inline-block gap-3"}>
+                        <label htmlFor="name">Date de réservation () : </label>
+                        <DateTimePicker onChange={setValue} value={dateValue}/>
+                    </div>
+                    <p>Meteo : {meteo}</p>
+                    <p>nombre de place libre : {freePlace}</p>
+                    <label className={"text-red-600  text-center font-bold"}>{error}</label>
+                    <button className={"hover:bg-cyan-400 duration-500"} onClick={reserver}>Reserver</button>
+                </div>
+            </Form>
+            <Form>
+                <div className={`flex z-20 flex-col gap-5 z-10 bg-cyan-50 right-10 top-10 m-5 p-5 rounded-2xl fixed ${formCreateVisibility}`}>
+                    <strong>Ajouter restaurant</strong>
+                    <form method="POST" className=" flex flex-col gap-2">
+                        <div className="form-example">
+                            <label htmlFor="name">Nom Restaurant: </label>
+                            <input className="border-2 border-black" type="text"  id="name" value="" onChange={(event) => {
+                                setNom(event.target.value)
+                            }} required/>
+                        </div>
+                        <div className="form-example">
+                            <label htmlFor="adress">Adresse du restaurant: </label>
+                            <input className="border-2 border-black" type="text"  id="adress" value="" onChange={(event) => {
+                                setAdresse(event.target.value)
+                            }} required/>
+                        </div>
+                        <div className="form-example">
+                            <label htmlFor="adress">nombre de table Max: </label>
+                            <input className="border-2 border-black" type="text"  id="adress" value="" onChange={(event) => {
+                                setTable(event.target.value)
+                            }} required/>
+                        </div>
+                        <div className="flex flex-row justify-center">
+                            <input className="text-center hover:bg-cyan-300 p-2 rounded" onClick={() => {
+                                // TODO -> set invible only if valid form
+                                setCreateVisibility(" invisible")
+                            }} formAction={`${hostname}`} type="submit" value="Valider"/>
+                        </div>
+                    </form>
+                </div>
+            </Form>
+            <p onClick={() => setTextVisibility(" invisible")} className={`cursor-pointer ${textVisibility}` }>{text}</p>
         </div>
     )
 }

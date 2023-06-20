@@ -14,7 +14,7 @@ const Onglet = ({text, route, icons}) => {
         }else {
             setClasse("hover:bg-amber-50 duration-700")
         }
-    }, [router, path])
+    }, [router,route, path])
 
     return (
         <div className={" p-5 cursor-pointer " + classe} onClick={() => {router.push(route)}}>
