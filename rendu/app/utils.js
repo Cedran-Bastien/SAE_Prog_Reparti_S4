@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-export let hostname = ""
+export let hostname = "https://100.64.80.192:34546"
 
 export function setHostName(newH){
     hostname = newH
