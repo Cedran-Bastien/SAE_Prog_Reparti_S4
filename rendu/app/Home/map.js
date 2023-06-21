@@ -7,10 +7,10 @@ import {Marker, Popup, useMapEvents} from "react-leaflet"
 import {icon} from 'leaflet'
 
 import probCirculations from "@/lib/probCirculations";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import velib from "@/lib/velib";
 import {hostname} from "@/app/utils";
-import fetch_proxy from "@/lib/fetchproxy";
+import {useRouter} from "next/navigation";
 
 const stationVelibIcon = icon({
     iconUrl: '/velib_station.png', iconSize: [20, 20],
@@ -109,18 +109,24 @@ const AllVeloLib = ({}) => {
 }
 
 const AllRestaurant = ({setId}) => {
+    const route = useRouter()
     const [data, setData] = useState([])
+    useEffect(() => {
 
-    fetch(hostname+"/db/restaurants").then((res) => {
-        res.json().then( (data => {
-            setData(data.restaurants)
-        }))
-    }).catch((err) => {
-        console.log("err")
-        console.log(err)
-    })
 
-    console.log(data)
+        fetch(hostname+"/db/restaurants").then((res) => {
+            res.json().then( (data => {
+                setData(data.restaurants)
+            }))
+        }).catch((err) => {
+            console.log("err")
+            console.log(err)
+        })
+
+        console.log(data)
+    },[route])
+
+
 
     const markers = data.map((item) => {return(<RestaurantMarker key={item.id} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
 
