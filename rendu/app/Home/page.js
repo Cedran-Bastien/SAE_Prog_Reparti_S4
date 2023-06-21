@@ -154,7 +154,6 @@ export default function Rendu(){
             <Form>
                 <div className={`flex z-20 flex-col gap-5 z-10 bg-cyan-50 right-10 top-10 m-5 p-5 rounded-2xl fixed ${formCreateVisibility}`}>
                     <strong>Ajouter restaurant</strong>
-                    <form method="POST" className=" flex flex-col gap-2">
                         <div className="form-example">
                             <label htmlFor="name">Nom Restaurant: </label>
                             <input className="border-2 border-black" type="text"  id="name" onChange={(event) => {
@@ -175,7 +174,6 @@ export default function Rendu(){
                         </div>
                         <div className="flex flex-row justify-center">
                             <input className="text-center hover:bg-cyan-300 p-2 rounded" onClick={() => {
-
                                 fetch(hostname+"/db/restaurants/ajouterresto/ajouterresto",
                                     {
                                         method: "POST",
@@ -197,7 +195,6 @@ export default function Rendu(){
                                 });
                             }} formAction={`${hostname}`} type="submit" value="Valider"/>
                         </div>
-                    </form>
                 </div>
             </Form>
             <p onClick={() => setTextVisibility(" invisible")} className={`font-bold ${color} cursor-pointer ${textVisibility}` }>{text}</p>
