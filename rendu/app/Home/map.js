@@ -140,10 +140,8 @@ const AllRestaurant = ({setleId,changeVisibility}) => {
 const Event = ({closeReserv,displayCreate, setLat, setLong}) => {
     const map = useMapEvents({
         click: (e) => {
-            console.log(e.latlng.latitude)
-            console.log(e.latlng.longitude)
-            setLat(e.latlng.latitude)
-            setLong(e.latlng.longitude)
+            setLat(e.latlng.lat)
+            setLong(e.latlng.lng)
             closeReserv(" invisible")
             displayCreate("")
         },
