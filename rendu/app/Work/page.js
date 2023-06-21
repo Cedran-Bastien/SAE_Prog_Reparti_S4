@@ -41,6 +41,11 @@ export default function rendu() {
             title: "Données-bloquées",
             content: "Certaines données publiques nécessitent que le serveur active les CORS Multi-origine pour y avoir accès. Il faut ainsi passer par le Proxy pour activer ces CORS en ajoutant l'Header 'Content type' ",
             html: ""
+        },
+        {
+            title: "Lien",
+            content: "les liens a avoir",
+            html: (<div><a href="https://github.com/Cedran-Bastien/SAE_Prog_Reparti_S4"> Git</a> <a href"">Template du site</a></div> )
         }
     ]
     return (
