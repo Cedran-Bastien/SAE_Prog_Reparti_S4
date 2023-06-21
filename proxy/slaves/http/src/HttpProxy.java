@@ -19,7 +19,17 @@ public class HttpProxy implements HttpHandlerProxy {
     public static final String HTTP = "/http";
 
     public static void main(String[] args) throws RemoteException, NotBoundException {
-        Registry registry = LocateRegistry.getRegistry(34545);
+
+        String hostname = "iutnc-021-00";
+        int port = 34546;
+
+        if (args.length > 0){
+            hostname = args[0];
+            if (args.length > 1)
+                port = Integer.parseInt(args[1]);
+        }
+
+        Registry registry = LocateRegistry.getRegistry(hostname,port);
         ProxyI proxy = (ProxyI) registry.lookup("proxy");
         HttpHandlerProxy remoteObject = (HttpHandlerProxy) UnicastRemoteObject.exportObject(new HttpProxy(), 0);
         proxy.enregistrerService(HTTP, remoteObject);
