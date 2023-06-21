@@ -149,7 +149,7 @@ export default function Rendu(){
                     <div  className={"inline-block gap-3"}>
                         <label htmlFor="name">nombre de personnes : </label>
                         <input className="border-black border-2" onChange={(event) => {
-                            setPrenom(event.target.value)
+                            setNB(event.target.value)
                         }} type="number" value={nbPersonne}/>
                     </div>
                     <div onChange={updateValue} className={"inline-block gap-3"}>
