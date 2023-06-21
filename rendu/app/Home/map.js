@@ -27,6 +27,7 @@ const CirculationIcon = icon({
 })
 
 const RestaurantMarker= ({setId, id, nom, adresse, lat, lng, changeVisibility}) => {
+    const ID = id
     return (
         <Marker position={[lat, lng]} icon={restaurantIcon}>
             <Popup>
@@ -36,7 +37,7 @@ const RestaurantMarker= ({setId, id, nom, adresse, lat, lng, changeVisibility}) 
                     <button onClick={() => {
                         console.log(setId)
                         console.log(changeVisibility)
-                        // setId(id)
+                        setId(ID)
                         changeVisibility("")
                     }}>Réserver</button>
                 </div>
@@ -110,7 +111,7 @@ const AllVeloLib = ({}) => {
     )
 }
 
-const AllRestaurant = ({setId,changeVisibility}) => {
+const AllRestaurant = ({setleId,changeVisibility}) => {
     const route = useRouter()
     const [data, setData] = useState([])
     useEffect(() => {
@@ -130,7 +131,7 @@ const AllRestaurant = ({setId,changeVisibility}) => {
 
 
 
-    const markers = data.map((item) => {return(<RestaurantMarker  key={item.id} changeVisibility={changeVisibility} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
+    const markers = data.map((item) => {return(<RestaurantMarker  key={item.id} changeVisibility={changeVisibility} setId={setleId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
 
 
 
@@ -164,7 +165,7 @@ export const Map =  ({changeVisibility, createVisibility, setLat, setLong, setId
             />
             <AllProbCirc/>
             <AllVeloLib/>
-            <AllRestaurant changeVisibility={changeVisibility} setId={setId}/>
+            <AllRestaurant changeVisibility={changeVisibility} setleId={setId}/>
         </MapContainer>
     )
 }
