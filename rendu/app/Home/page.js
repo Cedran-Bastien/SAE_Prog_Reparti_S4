@@ -44,7 +44,7 @@ export default function Rendu(){
             day = "0"+dateValue.getDay()
         }
 
-        fetch(hostname+"/db/restaurant/reserver",{
+        fetch(hostname+"/db/restaurants/reserver",{
             method: "POST",
             headers: {
 
