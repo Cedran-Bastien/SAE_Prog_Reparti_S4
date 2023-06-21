@@ -33,7 +33,18 @@ export default function Rendu(){
             setError("Minutes must be equal to 00")
         }
 
-        fetch(hostname+`/db/restaurant/reserver?id_resto=${id}+date=${dateValue.getFullYear()}-${dateValue.getMonth()}-${dateValue.getDay()}+heure=${dateValue.getHours()}+personnes=${nbPersonne}+nom=${nom}+prenom=${prenom}+tel=${tel}`,{method: 'POST'}).then((res) => {
+        let month;
+        let day;
+
+
+        if (dateValue.getMonth().toString().length === 1){
+            month = "0"+dateValue.getMonth()
+        }
+        if (dateValue.getMonth().toString().length === 1){
+            day = "0"+dateValue.getDay()
+        }
+
+        fetch(hostname+`/db/restaurant/reserver?id_resto=${id}+date=${dateValue.getFullYear()}-${month}-${day}+heure=${dateValue.getHours()}+personnes=${nbPersonne}+nom=${nom}+prenom=${prenom}+tel=${tel}`,{method: 'POST'}).then((res) => {
             if (res.status === 200){
                 setColor(" text-green-700")
                 setText("Reservation Success")
@@ -52,7 +63,7 @@ export default function Rendu(){
         })
     }
 
-
+    dateValue.get
     //TODO -> rajouter filtre date
     const updateValue = () => {
         fetch(hostname+`/db/restaurants/${id}/reservation/${dateValue.getFullYear()+"-"+dateValue.getMonth()+"-"+dateValue.getDay()}/${dateValue.getHours()}`).then((res) => {
