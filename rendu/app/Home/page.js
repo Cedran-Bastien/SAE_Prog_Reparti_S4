@@ -124,25 +124,25 @@ export default function Rendu(){
                     <form method="POST" className=" flex flex-col gap-2">
                         <div className="form-example">
                             <label htmlFor="name">Nom Restaurant: </label>
-                            <input className="border-2 border-black" type="text"  id="name" value="" onChange={(event) => {
+                            <input className="border-2 border-black" type="text"  id="name" onChange={(event) => {
                                 setNom(event.target.value)
                             }} required/>
                         </div>
                         <div className="form-example">
                             <label htmlFor="adress">Adresse du restaurant: </label>
-                            <input className="border-2 border-black" type="text"  id="adress" value="" onChange={(event) => {
+                            <input className="border-2 border-black" type="text"  id="adress" onChange={(event) => {
                                 setAdresse(event.target.value)
                             }} required/>
                         </div>
                         <div className="form-example">
                             <label htmlFor="adress">nombre de table Max: </label>
-                            <input className="border-2 border-black" type="text"  id="adress" value="" onChange={(event) => {
+                            <input className="border-2 border-black" type="text"  id="adress" onChange={(event) => {
                                 setTable(event.target.value)
                             }} required/>
                         </div>
                         <div className="flex flex-row justify-center">
                             <input className="text-center hover:bg-cyan-300 p-2 rounded" onClick={() => {
-                                fetch(`${hostname}/cd/restaurants/ajouterresto?name=${nom}+nb_tables=${table}+adresse=${adresse}+latitude=${lat}+longitude=${long}`, {method: 'POST'}).then( (res) => {
+                                fetch(`${hostname}/bd/restaurants/ajouterresto?name=${nom}+nb_tables=${table}+adresse=${adresse}+latitude=${lat}+longitude=${long}`, {method: 'POST'}).then( (res) => {
                                     if (res.status === 200) {
                                         setCreateVisibility(" invisible")
                                         setColor(" text-green-700")

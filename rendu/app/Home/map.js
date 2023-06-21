@@ -115,13 +115,15 @@ const AllRestaurant = ({setId}) => {
         console.log(err)
     })
 
-    // const markers = data.map((item) => {return(<RestaurantMarker setId lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
-    //
-    // return (
-    //     <div>
-    //         {markers}
-    //     </div>
-    // )
+    const markers = data.map((item) => {return(<RestaurantMarker setId lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
+
+    console.log(data)
+
+    return (
+        <div>
+            {markers}
+        </div>
+    )
 }
 
 const Event = ({closeReserv,displayCreate, setLat, setLong}) => {
