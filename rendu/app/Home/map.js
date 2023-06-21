@@ -9,7 +9,7 @@ import {icon} from 'leaflet'
 import probCirculations from "@/lib/probCirculations";
 import {useState} from "react";
 import velib from "@/lib/velib";
-import {hostname} from "@/public/const/const";
+import {hostname} from "@/app/utils";
 
 const stationVelibIcon = icon({
     iconUrl: '/velib_station.png', iconSize: [20, 20],
@@ -111,6 +111,8 @@ const AllRestaurant = ({setId}) => {
     const [data, setData] = useState([])
     fetch(hostname+"/db/restaurants").then((res) => {
         setData(res.data)
+    }).catch((err) => {
+        console.log(err)
     })
 
     // const markers = data.map((item) => {return(<RestaurantMarker setId lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})

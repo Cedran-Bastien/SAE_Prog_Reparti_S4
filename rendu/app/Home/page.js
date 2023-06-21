@@ -5,7 +5,7 @@ import {useState} from "react";
 import dynamic from "next/dynamic";
 import dataMeteo from "@/lib/meteo";
 import DateTimePicker from "react-datetime-picker";
-import {hostname} from "@/public/const/const";
+import {hostname} from "@/app/utils";
 
 
 export default function Rendu(){
@@ -23,6 +23,7 @@ export default function Rendu(){
     const [long, setLong] = useState()
     const [table, setTable] = useState()
     const [formCreateVisibility, setCreateVisibility] = useState( " invisible")
+    const [color, setColor] = useState(" text-green-700")
 
 
 
@@ -34,10 +35,15 @@ export default function Rendu(){
 
         fetch(hostname+`/db/restaurant/reserver?id_resto=${id}+date=${dateValue /* TODO -> format*/}+heure=${dateValue.getHours()}+personnes=${nbPersonne}+nom=${nom}+prenom=${prenom}+tel=${tel}`,{method: 'POST'}).then((res) => {
             if (res.status === 200){
+                setColor(" text-green-700")
                 setText("Reservation Success")
                 setTextVisibility("")
             }
-
+        }).catch((err) => {
+            setColor(" text-red-500")
+            setText(" Error server")
+            setTextVisibility("")
+            console.log(err)
         })
     }
 
@@ -131,14 +137,24 @@ export default function Rendu(){
                         </div>
                         <div className="flex flex-row justify-center">
                             <input className="text-center hover:bg-cyan-300 p-2 rounded" onClick={() => {
-                                // TODO -> set invible only if valid form
-                                setCreateVisibility(" invisible")
+                                // TODO -> path to add restaurant
+                                fetch(`${hostname}/cd/restaurants/   ?name=${nom}+nb_tables=${table}+adresse=${adresse}+latitude=${lat}+longitude=${long}`, {method: 'POST'}).then( (res) => {
+                                    setCreateVisibility(" invisible")
+                                    setColor(" text-green-700")
+                                    setText(" Correctly added")
+                                    setTextVisibility("")
+                                }).catch( () => {
+                                    setColor(" text-red-500")
+                                    setText(" Error server")
+                                    setTextVisibility("")
+                                    console.log(err)
+                                })
                             }} formAction={`${hostname}`} type="submit" value="Valider"/>
                         </div>
                     </form>
                 </div>
             </Form>
-            <p onClick={() => setTextVisibility(" invisible")} className={`cursor-pointer ${textVisibility}` }>{text}</p>
+            <p onClick={() => setTextVisibility(" invisible")} className={`font-bold ${color} cursor-pointer ${textVisibility}` }>{text}</p>
         </div>
     )
 }

@@ -48,6 +48,11 @@ export const Header = () => {
             name: "Travail réalisé",
             route: '/Work',
             icon: <School/>
+        },
+        {
+            name: 'Set HostName',
+            route: '/SetHost',
+            icon: <></>
         }
     ]
     return (
