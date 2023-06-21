@@ -36,7 +36,7 @@ const RestaurantMarker= ({setId, id, nom, adresse, lat, lng, changeVisibility}) 
                     <button onClick={() => {
                         console.log(setId)
                         console.log(changeVisibility)
-                        setId(id)
+                        // setId(id)
                         changeVisibility("")
                     }}>Réserver</button>
                 </div>
@@ -162,8 +162,8 @@ export const Map =  ({changeVisibility, createVisibility, setLat, setLong, setId
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            {/*<AllProbCirc/>*/}
-            {/*<AllVeloLib/>*/}
+            <AllProbCirc/>
+            <AllVeloLib/>
             <AllRestaurant changeVisibility={changeVisibility} setId={setId}/>
         </MapContainer>
     )
