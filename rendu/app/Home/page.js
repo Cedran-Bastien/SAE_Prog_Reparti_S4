@@ -56,7 +56,9 @@ export default function Rendu(){
     //TODO -> rajouter filtre date
     const updateValue = () => {
         fetch(hostname+`/db/restaurants/${id}/reservation/${dateValue.getFullYear()+"-"+dateValue.getMonth()+"-"+dateValue.getDay()}/${dateValue.getHours()}`).then((res) => {
+            console.log(res)
             res.json().then( (data) => {
+                console.log(data)
                setFreePlace(data.dispo_table)
             })
         })

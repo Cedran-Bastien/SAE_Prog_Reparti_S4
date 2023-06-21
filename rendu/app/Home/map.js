@@ -35,8 +35,6 @@ const RestaurantMarker= ({setId, id, nom, adresse, lat, lng, changeVisibility}) 
                     <h3>{nom}</h3>
                     <p>{adresse}</p>
                     <button onClick={() => {
-                        console.log(setId)
-                        console.log(changeVisibility)
                         setId(ID)
                         changeVisibility("")
                     }}>Réserver</button>
@@ -122,11 +120,8 @@ const AllRestaurant = ({setleId,changeVisibility}) => {
                 setData(data.restaurants)
             }))
         }).catch((err) => {
-            console.log("err")
             console.log(err)
         })
-
-        console.log(data)
     },[route])
 
 

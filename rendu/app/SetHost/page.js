@@ -21,7 +21,7 @@ export default function Rendu() {
             <button className="content-center duration-500 p-2 hover:bg-cyan-400" onClick={() => {
                 setHostName(value)
                 console.log(hostname)
-                setError("Set up !!")
+                setError( hostname + " Set up !!")
             }}> Save </button>
             <div className="text-red-500 font-bold">
                 {error}

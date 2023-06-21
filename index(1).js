@@ -46,7 +46,6 @@ map.on('click', onMapClick);
 
 // velib
 velib.loadStationInfo().then (data => {
-    console.log(data);
     data.forEach(element => {
         leaflet_custom.displayMarkerVelib(map,"Station Vélib", element.address, element.lat, element.lon);
     });
@@ -56,7 +55,6 @@ velib.loadStationInfo().then (data => {
 
 //probCirculation
 probCirculations.loadInfosRoutieres().then (data => {
-    console.log(data);
     data.forEach(element => {
 
         leaflet_custom.displayMarkerProbCirculation(map,element.cause, element.address, element.lat, element.lon,element.starttime,element.endtime);
