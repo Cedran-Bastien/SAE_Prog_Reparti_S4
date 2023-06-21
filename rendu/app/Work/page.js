@@ -11,35 +11,35 @@ export default function rendu() {
         },
         {
             title: "Proxy",
-            content:"Il correspond, dans l'architecture général de RMI, au service centrale. Il permet le lien entre le client et le service BDD",
+            content:"Il correspond, dans l'architecture générale de RMI, au service central. Il permet le lien entre le client et le service BDD",
             html: ""
         },
 
         {
             title: "Données_Circulation",
-            content: "Ce sont des données public auquel on accedent directement a partir du client. Nous avons pas de probleme de CORS et donc pas besoin de passer par le server proxy.",
+            content: "Ce sont des données publiques auxquelles on accède directement à partir du client. Nous n'avons pas de probleme de CORS et donc pas besoin de passer par le server proxy.",
             html: ""
         },
         {
             title: "Service_BDD",
-            content: "Ce service permet de faire le lien entre la base de donnée et le proxy. Il recupere les données dans la base de données et les retournes au proxy au format JSON pour une facilité d'utilisation par le client",
+            content: "Ce service permet de faire le lien entre la base de données et le proxy. Il récupère les données dans la base de données et les retournent au proxy au format JSON pour une facilité d'utilisation pour le client",
             html: ""
         },
         {
             title: "Base de données (BDD)",
-            content: "Nous enregistrons les données correspondant au restautrant et au réservation dans ceux ci a une certaine date. Ce sont ces restaurant qui seront afficher sur la carte" +
+            content: "Nous enregistrons les données correspondant aux restaurants et aux réservations dans ceux-ci à une certaine date. Ce sont ces restaurants qui seront affichés sur la carte" +
                 ". ",
             html: ""
         },
         {
             title: "Client",
-            content: "Le client vas, a travers internet ou le proxy si besoin. Une fois ces donneés recuperer, il va parser ces données afin de pouvoir les affichersur le navigateur." +
-                "C'est le front end de l'application.",
+            content: "Le client passe à travers internet ou le proxy si besoin. Une fois ces données recuperées, il va partager ces données afin de pouvoir les afficher sur le navigateur." +
+                "C'est le front-end de l'application.",
             html:""
         },
         {
-            title: "Données-bloqué",
-            content: "Certaine données public nessessite que le serveur active les CORS Multi-origine pour y avoir accées. Il faut ainsy passer par le Proxy pour activer ces CORS en ajoutant l'Header 'Content type' ",
+            title: "Données-bloquées",
+            content: "Certaines données publiques nécessitent que le serveur active les CORS Multi-origine pour y avoir accès. Il faut ainsi passer par le Proxy pour activer ces CORS en ajoutant l'Header 'Content type' ",
             html: ""
         }
     ]
