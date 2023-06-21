@@ -45,7 +45,11 @@ export default function rendu() {
         {
             title: "Lien",
             content: "les liens a avoir",
-            html: (<div><a href={"https://github.com/Cedran-Bastien/SAE_Prog_Reparti_S4"}> Git</a> <a href="Https://webetu.iutnc.univ-lorraine.fr/www/lath3u/">Template du site</a></div> )
+            html: (
+                <div>
+                    <a href={"https://github.com/Cedran-Bastien/SAE_Prog_Reparti_S4"}> Git</a>
+                    <a href="Https://webetu.iutnc.univ-lorraine.fr/www/lath3u/">Template du site</a>
+                </div> )
         }
     ]
     return (
