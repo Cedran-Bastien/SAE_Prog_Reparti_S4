@@ -66,7 +66,6 @@ export default function Rendu(){
         })
     }
 
-    //TODO -> rajouter filtre date
     const updateValue = () => {
         let month;
         let day;
@@ -88,7 +87,7 @@ export default function Rendu(){
                setFreePlace(data.tables.dispo_tables)
             })
         })
-        dataMeteo().then((res) => {
+        dataMeteo(dateValue.getFullYear()+"-"+month+"-"+day).then((res) => {
             console.log(res)
             if (res[2][1] > 0) {
                 setMeteo(`il y aura du soleil, des vents ${res[3][1]} et une temperature de ${res[6][1 ]}`)
@@ -143,7 +142,7 @@ export default function Rendu(){
                         <DateTimePicker onChange={setValue} value={dateValue}/>
                     </div>
                     <p>Meteo : {meteo}</p>
-                    <p>nombre de place libre : {freePlace}</p>
+                    <p>nombre de table (4 places) libre : {freePlace} tables</p>
                     <label className={"text-red-600  text-center font-bold"}>{error}</label>
                     <button className={"hover:bg-cyan-400 duration-500"} onClick={reserver}>Reserver</button>
                 </div>

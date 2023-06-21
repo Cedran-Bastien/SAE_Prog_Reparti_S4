@@ -1,72 +1,76 @@
 import fetch_proxy from "./fetchproxy.js";
 
-export default async function dataMeteo() {
+export async function dataMeteo(date, heure) {
 
-    let pr = await fetch_proxy("https://www.infoclimat.fr/public-api/gfs/json?_ll=48.67103,6.15083&_auth=ARsDFFIsBCZRfFtsD3lSe1Q8ADUPeVRzBHgFZgtuAH1UMQNgUTNcPlU5VClSfVZkUn8AYVxmVW0Eb1I2WylSLgFgA25SNwRuUT1bPw83UnlUeAB9DzFUcwR4BWMLYwBhVCkDb1EzXCBVOFQoUmNWZlJnAH9cfFVsBGRSPVs1UjEBZwNkUjIEYVE6WyYPIFJjVGUAZg9mVD4EbwVhCzMAMFQzA2JRMlw5VThUKFJiVmtSZQBpXGtVbwRlUjVbKVIuARsDFFIsBCZRfFtsD3lSe1QyAD4PZA%3D%3D&_c=19f3aa7d766b6ba91191c8be71dd1ab2");
-    let data;
-    let tabBis = [];
+    const response = await fetch_proxy("https://www.infoclimat.fr/public-api/gfs/json?_ll=48.67103,6.15083&_auth=ARsDFFIsBCZRfFtsD3lSe1Q8ADUPeVRzBHgFZgtuAH1UMQNgUTNcPlU5VClSfVZkUn8AYVxmVW0Eb1I2WylSLgFgA25SNwRuUT1bPw83UnlUeAB9DzFUcwR4BWMLYwBhVCkDb1EzXCBVOFQoUmNWZlJnAH9cfFVsBGRSPVs1UjEBZwNkUjIEYVE6WyYPIFJjVGUAZg9mVD4EbwVhCzMAMFQzA2JRMlw5VThUKFJiVmtSZQBpXGtVbwRlUjVbKVIuARsDFFIsBCZRfFtsD3lSe1QyAD4PZA%3D%3D&_c=19f3aa7d766b6ba91191c8be71dd1ab2");
+    const data = await response.json();
+    const tabBis = [];
 
-    if (pr.ok){
-        data = await pr.json();
-        let cpt = 0;
-        for (const [cle, valeur] of Object.entries(data)) {
+    const processData = (key, value) => {
+        let nebu = value.nebulosite;
+        let temp = value.temperature;
+        let humi = value.humidite;
+        let vmoy = value.vent_moyen;
+        let vrafales = value.vent_rafales;
+        let vdirection = value.vent_direction;
 
-            if(cpt>4) {
-
-                let nebu = valeur.nebulosite;
-                let temp = valeur.temperature;
-                let humi = valeur.humidite;
-                let vmoy = valeur.vent_moyen;
-                let vrafales = valeur.vent_rafales;
-                let vdirection = valeur.vent_direction;
-
-                if (temp instanceof Object) {
-                    temp = temp["sol"];
-                    temp = temp - 273;
-                    temp = Math.floor(temp);
-                }
-
-                if (nebu instanceof Object) {
-                    nebu = nebu["totale"];
-                    nebu = getNebulosityDescription(nebu);
-                }
-
-                if (humi instanceof Object) {
-                    humi = humi["2m"];
-                }
-
-                if (vmoy instanceof Object) {
-                    vmoy = vmoy["10m"];
-                    vmoy = Math.floor(vmoy * 3.6);
-
-                }
-
-                if (vrafales instanceof Object) {
-                    vrafales = vrafales["10m"];
-                    vrafales = Math.floor(vrafales * 3.6);
-                }
-
-                if (vdirection instanceof Object) {
-                    vdirection = vdirection["10m"];
-                    vdirection = getDirectionFromDegrees(vdirection);
-                }
-
-                let keyVal = [];
-
-                keyVal.push(cle);
-                keyVal.push(["humitide", humi]);
-                keyVal.push(["pluie", valeur.pluie]);
-                keyVal.push(["vent_moyen", vmoy]);
-                keyVal.push(["vent_rafales", vrafales]);
-                keyVal.push(["vent_direction", vdirection]);
-                keyVal.push(["temperature", temp]);
-                keyVal.push(["nebulosite", nebu]);
-
-                tabBis.push(keyVal);
-            }
-            cpt++;
+        if (temp instanceof Object) {
+            temp = temp["sol"] - 273;
+            temp = Math.floor(temp);
         }
 
+        if (nebu instanceof Object) {
+            nebu = getNebulosityDescription(nebu["totale"]);
+        }
+
+        if (humi instanceof Object) {
+            humi = humi["2m"];
+        }
+
+        if (vmoy instanceof Object) {
+            vmoy = Math.floor(vmoy["10m"] * 3.6);
+        }
+
+        if (vrafales instanceof Object) {
+            vrafales = Math.floor(vrafales["10m"] * 3.6);
+        }
+
+        if (vdirection instanceof Object) {
+            vdirection = getDirectionFromDegrees(vdirection["10m"]);
+        }
+
+        const keyVal = [
+            key,
+            ["humitide", humi],
+            ["pluie", value.pluie],
+            ["vent_moyen", vmoy],
+            ["vent_rafales", vrafales],
+            ["vent_direction", vdirection],
+            ["temperature", temp],
+            ["nebulosite", nebu]
+        ];
+
+        tabBis.push(keyVal);
+    };
+
+    if (response.ok) {
+        if (date !== undefined && heure !== undefined) {
+            const datetime = `${date} ${heure}`;
+
+            Object.entries(data)
+                .slice(5)
+                .forEach(([key, value]) => {
+                    if (key === datetime) {
+                        processData(key, value);
+                    }
+                });
+        } else {
+            Object.entries(data)
+                .slice(5)
+                .forEach(([key, value]) => {
+                    processData(key, value);
+                });
+        }
     }
 
     return tabBis;
