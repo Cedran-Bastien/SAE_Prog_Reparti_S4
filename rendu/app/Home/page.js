@@ -87,7 +87,11 @@ export default function Rendu(){
                setFreePlace(data.tables.dispo_tables)
             })
         })
-        dataMeteo(dateValue.getFullYear()+"-"+month+"-"+day, dateValue.getHours()+":00:00").then((res) => {
+        let hour
+        if (dateValue.getHours().toString().length === 1){
+            hour = "0"+dateValue.getMonth()
+        }
+        dataMeteo(dateValue.getFullYear()+"-"+month+"-"+day, hour+":00:00").then((res) => {
             console.log(res)
             if (res[2][1] > 0) {
                 setMeteo(`il y aura du soleil, des vents ${res[3][1]} et une temperature de ${res[6][1 ]}`)
