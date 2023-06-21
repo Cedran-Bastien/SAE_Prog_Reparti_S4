@@ -175,25 +175,6 @@ export default function Rendu(){
                         </div>
                         <div className="flex flex-row justify-center">
                             <input className="text-center hover:bg-cyan-300 p-2 rounded" onClick={() => {
-                                fetch(`${hostname}/bd/restaurants/ajouterresto?name=${nom}+nb_tables=${table}+adresse=${adresse}+latitude=${lat}+longitude=${long}`, {method: 'POST'}).then( (res) => {
-                                    if (res.status === 200) {
-                                        setCreateVisibility(" invisible")
-                                        setColor(" text-green-700")
-                                        setText(" Correctly added")
-                                        setTextVisibility("")
-                                    }else {
-                                        setColor(" text-red-500")
-                                        setText(" Error server")
-                                        setTextVisibility("")
-                                        console.log(err)
-                                    }
-
-                                }).catch( () => {
-                                    setColor(" text-red-500")
-                                    setText(" Error server")
-                                    setTextVisibility("")
-                                    console.log(err)
-                                })
 
                                 fetch(hostname+"/db/restaurants/ajouterresto/ajouterresto",
                                     {
