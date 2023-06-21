@@ -3,7 +3,7 @@
 import {Form, ReservForm} from "@/app/Home/Reservation";
 import {useState} from "react";
 import dynamic from "next/dynamic";
-import dataMeteo from "@/lib/meteo";
+import {dataMeteo} from "@/lib/meteo";
 import DateTimePicker from "react-datetime-picker";
 import {hostname} from "@/app/utils";
 
