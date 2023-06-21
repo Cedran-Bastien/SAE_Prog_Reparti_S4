@@ -36,13 +36,10 @@ export default function Rendu(){
         let month;
         let day;
 
-        console.log(dateValue.getMonth().toString().length)
-
         if (dateValue.getMonth().toString().length === 1){
             month = "0"+dateValue.getMonth()
         }
 
-        console.log(dateValue.getDay().toString().length)
         if (dateValue.getDay().toString().length === 1){
             day = "0"+dateValue.getDay()
         }
@@ -63,7 +60,8 @@ export default function Rendu(){
                 "tel": tel
 
             })}).then(res => res.json()).then( (res,data) => {
-            console.log(data);
+            console.log(res)
+            console.log(data)
             if (res.status === 200){
                 setColor(" text-green-700")
                 setText("Reservation Success")
@@ -72,7 +70,6 @@ export default function Rendu(){
                 setColor(" text-red-500")
                 setText(" Error server")
                 setTextVisibility("")
-                console.log(err)
             }
         }).catch(err => console.log(err));
     }
