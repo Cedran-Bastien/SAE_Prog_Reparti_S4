@@ -47,7 +47,23 @@ export default function Rendu(){
             day = "0"+dateValue.getDay()
         }
 
-        fetch(hostname+`/db/restaurant/reserver?id_resto=${id}+date=${dateValue.getFullYear()}-${month}-${day}+heure=${dateValue.getHours()}+personnes=${nbPersonne}+nom=${nom}+prenom=${prenom}+tel=${tel}`,{method: 'POST'}).then((res) => {
+        fetch(hostname+"+`/db/restaurant/reserver",{
+            method: "POST",
+            headers: {
+
+                "Content-Type": "application/json;charset=utf-8"
+            },
+            body: JSON.stringify({
+                "id_resto": id,
+                "date": `${dateValue.getFullYear()}-${month}-${day}`,
+                "heure": dateValue.getHours(),
+                "personnes": nbPersonne,
+                "nom": nom,
+                "prenom": prenom,
+                "tel": tel
+
+            })}).then(res => res.json()).then( (res,data) => {
+            console.log(data);
             if (res.status === 200){
                 setColor(" text-green-700")
                 setText("Reservation Success")
@@ -58,12 +74,7 @@ export default function Rendu(){
                 setTextVisibility("")
                 console.log(err)
             }
-        }).catch((err) => {
-            setColor(" text-red-500")
-            setText(" Error server")
-            setTextVisibility("")
-            console.log(err)
-        })
+        }).catch(err => console.log(err));
     }
 
     const updateValue = () => {
