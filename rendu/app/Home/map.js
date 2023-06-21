@@ -113,7 +113,7 @@ const AllRestaurant = ({setId}) => {
 
     fetch(hostname+"/db/restaurants").then((res) => {
         res.json().then( (data => {
-            setData(data)
+            setData(data.restaurants)
         }))
     }).catch((err) => {
         console.log("err")
