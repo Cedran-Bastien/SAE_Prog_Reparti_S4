@@ -34,6 +34,7 @@ const RestaurantMarker= ({setId, id, nom, adresse, lat, lng, changeVisibility}) 
                     <h3>{nom}</h3>
                     <p>{adresse}</p>
                     <button onClick={() => {
+                        console.log("button")
                         setId(id)
                         changeVisibility("")
                     }}>Réserver</button>
@@ -128,7 +129,7 @@ const AllRestaurant = ({setId,changeVisibility}) => {
 
 
 
-    const markers = data.map((item) => {return(<RestaurantMarker changeVisibility={changeVisibility} key={item.id} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
+    const markers = data.map((item) => {return(<RestaurantMarker  key={item.id} changeVisibility={changeVisibility} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
 
 
 
