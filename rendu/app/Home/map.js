@@ -115,7 +115,7 @@ const AllRestaurant = ({setId}) => {
         console.log(err)
     })
 
-    const markers = data.map((item) => {return(<RestaurantMarker setId lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
+    const markers = data.map((item) => {return(<RestaurantMarker key={item.id} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
 
     console.log(data)
 
