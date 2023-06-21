@@ -111,7 +111,7 @@ const AllVeloLib = ({}) => {
 const AllRestaurant = ({setId}) => {
     const [data, setData] = useState([])
 
-    fetch_proxy(hostname+"/db/restaurants").then((res) => {
+    fetch(hostname+"/db/restaurants").then((res) => {
         setData(res.data)
     }).catch((err) => {
         console.log("err")
