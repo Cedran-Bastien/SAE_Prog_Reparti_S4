@@ -33,11 +33,16 @@ export default function Rendu(){
             setError("Minutes must be equal to 00")
         }
 
-        fetch(hostname+`/db/restaurant/reserver?id_resto=${id}+date=${dateValue /* TODO -> format*/}+heure=${dateValue.getHours()}+personnes=${nbPersonne}+nom=${nom}+prenom=${prenom}+tel=${tel}`,{method: 'POST'}).then((res) => {
+        fetch(hostname+`/db/restaurant/reserver?id_resto=${id}+date=${dateValue.getFullYear()}-${dateValue.getMonth()}-${dateValue.getDay()}+heure=${dateValue.getHours()}+personnes=${nbPersonne}+nom=${nom}+prenom=${prenom}+tel=${tel}`,{method: 'POST'}).then((res) => {
             if (res.status === 200){
                 setColor(" text-green-700")
                 setText("Reservation Success")
                 setTextVisibility("")
+            } else {
+                setColor(" text-red-500")
+                setText(" Error server")
+                setTextVisibility("")
+                console.log(err)
             }
         }).catch((err) => {
             setColor(" text-red-500")
@@ -137,12 +142,19 @@ export default function Rendu(){
                         </div>
                         <div className="flex flex-row justify-center">
                             <input className="text-center hover:bg-cyan-300 p-2 rounded" onClick={() => {
-                                // TODO -> path to add restaurant
-                                fetch(`${hostname}/cd/restaurants/   ?name=${nom}+nb_tables=${table}+adresse=${adresse}+latitude=${lat}+longitude=${long}`, {method: 'POST'}).then( (res) => {
-                                    setCreateVisibility(" invisible")
-                                    setColor(" text-green-700")
-                                    setText(" Correctly added")
-                                    setTextVisibility("")
+                                fetch(`${hostname}/cd/restaurants/ajouterresto?name=${nom}+nb_tables=${table}+adresse=${adresse}+latitude=${lat}+longitude=${long}`, {method: 'POST'}).then( (res) => {
+                                    if (res.status === 200) {
+                                        setCreateVisibility(" invisible")
+                                        setColor(" text-green-700")
+                                        setText(" Correctly added")
+                                        setTextVisibility("")
+                                    }else {
+                                        setColor(" text-red-500")
+                                        setText(" Error server")
+                                        setTextVisibility("")
+                                        console.log(err)
+                                    }
+
                                 }).catch( () => {
                                     setColor(" text-red-500")
                                     setText(" Error server")
