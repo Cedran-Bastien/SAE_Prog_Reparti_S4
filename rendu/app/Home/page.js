@@ -80,7 +80,7 @@ export default function Rendu(){
 
     return (
         <div>
-            <MapWithNoSSR changeVisibility={setVisibility} createVisibility={setCreateVisibility} setid={setId} setLat={setLta} setLong={setLong}/>
+            <MapWithNoSSR changeVisibility={setVisibility} createVisibility={setCreateVisibility} setId={setId} setLat={setLta} setLong={setLong}/>
             <Form>
                 <div className={`flex z-40 flex-col gap-5 bg-cyan-50 right-10 top-10 m-5 p-5 rounded-2xl fixed ${formVisibility}`}>
                     <p>Reservation </p>
