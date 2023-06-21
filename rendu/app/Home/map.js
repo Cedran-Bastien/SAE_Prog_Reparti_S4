@@ -112,26 +112,23 @@ const AllRestaurant = ({setId}) => {
     const [data, setData] = useState([])
 
     fetch(hostname+"/db/restaurants").then((res) => {
-
-        console.log("err")
-        console.log(res.json())
-        setData(res.data)
+        res.json().then( (data => {
+            setData(data)
+        }))
     }).catch((err) => {
         console.log("err")
         console.log(err)
     })
 
-    console.log(data)
-
-    // const markers = data.map((item) => {return(<RestaurantMarker key={item.id} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
+    const markers = data.map((item) => {return(<RestaurantMarker key={item.id} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
 
 
 
-    // return (
-    //     <div>
-    //         {markers}
-    //     </div>
-    // )
+    return (
+        <div>
+            {markers}
+        </div>
+    )
 }
 
 const Event = ({closeReserv,displayCreate, setLat, setLong}) => {
