@@ -108,7 +108,7 @@ const AllVeloLib = ({}) => {
     )
 }
 
-const AllRestaurant = ({setId}) => {
+const AllRestaurant = ({setId,changeVisibility}) => {
     const route = useRouter()
     const [data, setData] = useState([])
     useEffect(() => {
@@ -128,7 +128,7 @@ const AllRestaurant = ({setId}) => {
 
 
 
-    const markers = data.map((item) => {return(<RestaurantMarker key={item.id} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
+    const markers = data.map((item) => {return(<RestaurantMarker changeVisibility={changeVisibility} key={item.id} setId={setId} lng={item.longitude} lat={item.latitude} adresse={item.adresse} nom={item.nom} id={item.id}/>)})
 
 
 
