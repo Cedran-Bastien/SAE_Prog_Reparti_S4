@@ -10,6 +10,7 @@ import probCirculations from "@/lib/probCirculations";
 import {useState} from "react";
 import velib from "@/lib/velib";
 import {hostname} from "@/app/utils";
+import fetch_proxy from "@/lib/fetchproxy";
 
 const stationVelibIcon = icon({
     iconUrl: '/velib_station.png', iconSize: [20, 20],
@@ -109,7 +110,8 @@ const AllVeloLib = ({}) => {
 
 const AllRestaurant = ({setId}) => {
     const [data, setData] = useState([])
-    fetch(hostname+"/db/restaurants").then((res) => {
+
+    fetch_proxy(hostname+"/db/restaurants").then((res) => {
         setData(res.data)
     }).catch((err) => {
         console.log(err)
