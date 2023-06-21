@@ -85,7 +85,7 @@ export default function Rendu(){
             console.log(res)
             res.json().then( (data) => {
                 console.log(data)
-               setFreePlace(data.dispo_table)
+               setFreePlace(data.tables.dispo_tables)
             })
         })
         dataMeteo().then((res) => {
