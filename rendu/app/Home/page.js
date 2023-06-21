@@ -60,17 +60,9 @@ export default function Rendu(){
                 "tel": tel
 
             })}).then(res => res.json()).then( (res,data) => {
-            console.log(res)
-            console.log(data)
-            if (res.status === 200){
                 setColor(" text-green-700")
                 setText("Reservation Success")
                 setTextVisibility("")
-            } else {
-                setColor(" text-red-500")
-                setText(" Error server")
-                setTextVisibility("")
-            }
         }).catch(err => console.log(err));
     }
 
@@ -170,14 +162,14 @@ export default function Rendu(){
                             }} required/>
                         </div>
                         <div className="form-example">
-                            <label htmlFor="adress">Adresse du restaurant: </label>
-                            <input className="border-2 border-black" type="text"  id="adress" onChange={(event) => {
+                            <label htmlFor="adresse">Adresse du restaurant: </label>
+                            <input className="border-2 border-black" type="text"  id="adresse" onChange={(event) => {
                                 setAdresse(event.target.value)
                             }} required/>
                         </div>
                         <div className="form-example">
-                            <label htmlFor="adress">nombre de table Max: </label>
-                            <input className="border-2 border-black" type="text"  id="adress" onChange={(event) => {
+                            <label htmlFor="nbTable">nombre de table Max: </label>
+                            <input className="border-2 border-black" type="text"  id="nbTable" onChange={(event) => {
                                 setTable(event.target.value)
                             }} required/>
                         </div>
@@ -202,6 +194,26 @@ export default function Rendu(){
                                     setTextVisibility("")
                                     console.log(err)
                                 })
+
+                                fetch(hostname+"/db/restaurants/ajouterresto/ajouterresto",
+                                    {
+                                        method: "POST",
+                                        headers: {
+                                            "Content-Type": "application/json"
+                                        },
+                                        body: JSON.stringify({
+                                            "nom": document.querySelector("#name").value,
+                                            "adresse": document.querySelector("#adresse").value,
+                                            "latitude": lat,
+                                            "longitude": long,
+                                            "nb_tables": document.querySelector("#nbTable").value
+                                        })
+                                    }).then(res => res.json()).then(data => {
+                                    setCreateVisibility(" invisible")
+                                    setColor(" text-green-700")
+                                    setText(" Correctly added")
+                                    setTextVisibility("")
+                                });
                             }} formAction={`${hostname}`} type="submit" value="Valider"/>
                         </div>
                     </form>
