@@ -112,6 +112,7 @@ const AllRestaurant = ({setId}) => {
     const [data, setData] = useState([])
 
     fetch(hostname+"/db/restaurants").then((res) => {
+        console.log(data)
         setData(res.data)
     }).catch((err) => {
         console.log("err")
