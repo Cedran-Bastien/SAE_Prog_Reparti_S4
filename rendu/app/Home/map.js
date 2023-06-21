@@ -34,7 +34,8 @@ const RestaurantMarker= ({setId, id, nom, adresse, lat, lng, changeVisibility}) 
                     <h3>{nom}</h3>
                     <p>{adresse}</p>
                     <button onClick={() => {
-                        console.log("button")
+                        console.log(setId)
+                        console.log(changeVisibility)
                         setId(id)
                         changeVisibility("")
                     }}>Réserver</button>
@@ -151,7 +152,7 @@ const Event = ({closeReserv,displayCreate, setLat, setLong}) => {
     })
 }
 
-export const Map =  ({changeVisibility, createVisibility, setLat, setLong, setyId }) => {
+export const Map =  ({changeVisibility, createVisibility, setLat, setLong, setId }) => {
 
     return (
         <MapContainer className={"absolute z-0 top-0 rounded w-screen h-screen"} center={[48.681817, 6.193542]}
@@ -163,7 +164,7 @@ export const Map =  ({changeVisibility, createVisibility, setLat, setLong, setyI
             />
             {/*<AllProbCirc/>*/}
             {/*<AllVeloLib/>*/}
-            <AllRestaurant changeVisibility={changeVisibility} setId={setyId}/>
+            <AllRestaurant changeVisibility={changeVisibility} setId={setId}/>
         </MapContainer>
     )
 }
