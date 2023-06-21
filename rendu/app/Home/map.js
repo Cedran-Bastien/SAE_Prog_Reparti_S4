@@ -124,11 +124,11 @@ const AllRestaurant = ({setId}) => {
 
 
 
-    return (
-        <div>
-            {markers}
-        </div>
-    )
+    // return (
+    //     <div>
+    //         {markers}
+    //     </div>
+    // )
 }
 
 const Event = ({closeReserv,displayCreate, setLat, setLong}) => {
