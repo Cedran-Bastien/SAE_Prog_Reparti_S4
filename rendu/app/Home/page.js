@@ -55,9 +55,11 @@ export default function Rendu(){
 
     //TODO -> rajouter filtre date
     const updateValue = () => {
-        // fetch(hostname+`/db/restaurants/${id}/reservation/${dateValue.getFullYear()+"-"+dateValue.getMonth()+"-"+dateValue.getDay()}/${dateValue.getHours()}`).then((res) => {
-        //     setFreePlace(res.dispo_table)
-        // })
+        fetch(hostname+`/db/restaurants/${id}/reservation/${dateValue.getFullYear()+"-"+dateValue.getMonth()+"-"+dateValue.getDay()}/${dateValue.getHours()}`).then((res) => {
+            res.json().then( (data) => {
+               setFreePlace(data.dispo_table)
+            })
+        })
         dataMeteo().then((res) => {
             console.log(res)
             if (res[2][1] > 0) {
