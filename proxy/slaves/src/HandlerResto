@@ -1,0 +1,420 @@
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
+import java.util.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
+public class HandlerResto implements HttpHandlerProxyJson{
+
+    public static final String prefix = "/db";
+
+    public static void main(String[] args) throws NotBoundException, RemoteException {
+
+        String master_hostname = "iutnc-021-00";
+        int master_port = 34545;
+        if (args.length > 0) {
+            master_hostname = args[0];
+            if (args.length > 1)
+                master_port = Integer.parseInt(args[0]);
+        }
+
+        Registry registry = LocateRegistry.getRegistry(master_hostname,master_port);
+        ProxyI proxy = (ProxyI) registry.lookup("proxy");
+        HttpHandlerProxyJson remoteObj = (HttpHandlerProxyJson) UnicastRemoteObject.exportObject((Remote) new HandlerResto(), 0);
+        proxy.enregistrerServiceJSON(prefix, remoteObj);
+
+
+    }
+
+
+    @Override
+    public String handle(String method, List<String> paths, Map<String, String> arguments, byte[] body) throws RemoteException {
+
+        try {
+
+
+            String userName = "capar7u";
+            String password = "etoui";
+            String serverName = "webetu.iutnc.univ-lorraine.fr";
+
+            String portNumber = "3306";
+
+
+            String dbName = "capar7u";
+
+
+            Properties connectionProps = new Properties();
+            connectionProps.put("user", userName);
+            connectionProps.put("password", password);
+            String urlDB = "jdbc:mysql://" + serverName + ":";
+            urlDB += portNumber + "/" + dbName;
+            Connection connect = DriverManager.getConnection(urlDB, connectionProps);
+
+
+            if(method.equals("GET")){
+
+                if ((paths.size() == 2) && (paths.get(1).equals("restaurants"))) {
+
+
+                    JSONArray restaurants = new JSONArray();
+
+                    String sql_restaurants = "Select id, nom, adresse, latitude, longitude, nb_tables from restaurant";
+
+                    PreparedStatement prep_restaurants = connect.prepareStatement(sql_restaurants);
+                    prep_restaurants.execute();
+                    ResultSet res_restaurants = prep_restaurants.getResultSet();
+
+                    while (res_restaurants.next()) {
+                        JSONObject resto = new JSONObject();
+                        resto.put("id", res_restaurants.getInt(1));
+                        resto.put("nom", res_restaurants.getString(2));
+                        resto.put("adresse", res_restaurants.getString(3));
+                        resto.put("latitude", res_restaurants.getString(4));
+                        resto.put("longitude", res_restaurants.getString(5));
+                        resto.put("nb_tables", res_restaurants.getInt(6));
+
+                        JSONObject links = new JSONObject();
+                        links.put("self", prefix+"/restaurants/" + res_restaurants.getInt(1));
+                        links.put("related", prefix+"/restaurants/" + res_restaurants.getInt(1) + "/reversations");
+                        resto.put("links", links);
+
+
+                        resto.put("href", "restaurants/" + res_restaurants.getInt(1));
+
+
+                        restaurants.add(resto);
+                    }
+                    JSONObject restaurants_obj = new JSONObject();
+                    restaurants_obj.put("restaurants", restaurants);
+                    connect.close();
+                    return restaurants_obj.toString();
+                }
+
+
+
+                if ((paths.size() >= 3) && (paths.get(1).equals("restaurants"))) {
+
+                    try {
+                        int id = Integer.parseInt(paths.get(2).toString());
+
+                        String sql_revif_id = "select id from restaurant where id = ?";
+                        PreparedStatement prep_verif_id = connect.prepareStatement(sql_revif_id);
+                        prep_verif_id.setInt(1, id);
+                        prep_verif_id.execute();
+
+                        ResultSet res_verif_id = prep_verif_id.getResultSet();
+
+                        if (res_verif_id.next()) {
+
+                            if(paths.size()==3){
+                                String sql_idresto = "select id, nom, adresse, latitude, longitude, nb_tables from restaurant where id = ?";
+
+                                PreparedStatement prep_idresto = connect.prepareStatement(sql_idresto);
+                                prep_idresto.setInt(1, id);
+                                prep_idresto.execute();
+                                ResultSet res_idresto = prep_idresto.getResultSet();
+
+                                JSONObject idresto = new JSONObject();
+
+
+                                while (res_idresto.next()) {
+                                    idresto.put("id", res_idresto.getInt(1));
+                                    idresto.put("nom", res_idresto.getString(2));
+                                    idresto.put("adresse", res_idresto.getString(3));
+                                    idresto.put("latitude", res_idresto.getString(4));
+                                    idresto.put("longitude", res_idresto.getString(5));
+                                    idresto.put("nb_tables", res_idresto.getInt(6));
+
+                                    JSONObject links = new JSONObject();
+                                    links.put("self", prefix+"/restaurants/" + res_idresto.getInt(1));
+                                    links.put("related", prefix+"/restaurants/" + res_idresto.getInt(1) + "/reversations");
+                                    idresto.put("links", links);
+                                }
+                                connect.close();
+
+                                return idresto.toString();
+                            }
+
+
+
+                            if((paths.size()==4)&&(paths.get(3).equals("reservations"))){
+
+                                String sql_reservations = "SELECT reservation.id_reserv, reservation.date, reservation.nb_tables, reservation.nb_personnes, reservation.nom, reservation.prenom, reservation.tel\n" +
+                                        "from restaurant, reservation\n" +
+                                        "where restaurant.id=reservation.id_resto\n" +
+                                        "and restaurant.id=?\n" +
+                                        "order by reservation.date;";
+
+                                PreparedStatement prep_reservations = connect.prepareStatement(sql_reservations);
+                                prep_reservations.setInt(1, id);
+                                prep_reservations.execute();
+
+                                ResultSet res_reservations = prep_reservations.getResultSet();
+
+                                JSONObject reservations = new JSONObject();
+                                JSONArray reservs = new JSONArray();
+
+                                while (res_reservations.next()){
+                                    JSONObject reserv = new JSONObject();
+                                    reserv.put("id_reserv", res_reservations.getInt(1));
+                                    reserv.put("date", res_reservations.getString(2));
+                                    reserv.put("nb_tables", res_reservations.getInt(3));
+                                    reserv.put("nb_personnes", res_reservations.getInt(4));
+                                    reserv.put("nom", res_reservations.getString(5));
+                                    reserv.put("prenom", res_reservations.getString(6));
+                                    reserv.put("tel", res_reservations.getString(7));
+                                    reservs.add(reserv);
+                                }
+                                reservations.put("reservations", reservs);
+                                connect.close();
+                                return reservations.toString();
+
+                            }
+
+                            if(paths.size()>=5){
+                                try {
+                                    LocalDate.parse(paths.get(4)); // Tente de parser la chaîne en LocalDate
+
+                                    if(paths.size()==5) {
+
+                                        String sql_res_date = "SELECT reservation.id_reserv, reservation.date, reservation.nb_tables, reservation.nb_personnes, reservation.nom, reservation.prenom, reservation.tel\n" +
+                                                "from restaurant, reservation\n" +
+                                                "where restaurant.id=reservation.id_resto\n" +
+                                                "and restaurant.id=?\n" +
+                                                "and DATE(reservation.date) = ?\n" +
+                                                "order by reservation.date;";
+
+                                        PreparedStatement prep_res_date = connect.prepareStatement(sql_res_date);
+                                        prep_res_date.setInt(1, id);
+                                        prep_res_date.setString(2, paths.get(4));
+                                        prep_res_date.execute();
+
+                                        ResultSet res_res_date = prep_res_date.getResultSet();
+
+                                        JSONObject res_date = new JSONObject();
+                                        JSONArray tab_res_date = new JSONArray();
+
+                                        while (res_res_date.next()) {
+                                            JSONObject une_res_date = new JSONObject();
+                                            une_res_date.put("id_reserv", res_res_date.getInt(1));
+                                            une_res_date.put("date", res_res_date.getString(2));
+                                            une_res_date.put("nb_tables", res_res_date.getInt(3));
+                                            une_res_date.put("nb_personnes", res_res_date.getInt(4));
+                                            une_res_date.put("nom", res_res_date.getString(5));
+                                            une_res_date.put("prenom", res_res_date.getString(6));
+                                            une_res_date.put("tel", res_res_date.getString(7));
+                                            tab_res_date.add(une_res_date);
+                                        }
+                                        res_date.put("reservations", tab_res_date);
+                                        connect.close();
+                                        return res_date.toString();
+                                    }
+
+                                    if(paths.size()==6){
+                                        try {
+                                            Integer.parseInt(paths.get(5));
+
+                                            String sql_res_heure = "SELECT reservation.id_reserv, reservation.date, reservation.nb_tables, reservation.nb_personnes, reservation.nom, reservation.prenom, reservation.tel\n" +
+                                                    "from restaurant, reservation\n" +
+                                                    "where restaurant.id=reservation.id_resto\n" +
+                                                    "and restaurant.id=?\n" +
+                                                    "and DATE(reservation.date)=?\n" +
+                                                    "and hour(reservation.date)=?\n" +
+                                                    "order by reservation.date";
+
+                                            PreparedStatement prep_res_heure = connect.prepareStatement(sql_res_heure);
+                                            prep_res_heure.setInt(1,id);
+                                            prep_res_heure.setString(2, paths.get(4));
+                                            prep_res_heure.setString(3, paths.get(5));
+                                            prep_res_heure.execute();
+
+                                            ResultSet res_res_heure = prep_res_heure.getResultSet();
+
+                                            JSONObject res_heure = new JSONObject();
+                                            JSONArray tab_res_heure = new JSONArray();
+
+                                            while (res_res_heure.next()) {
+                                                JSONObject une_res_heure = new JSONObject();
+                                                une_res_heure.put("id_reserv", res_res_heure.getInt(1));
+                                                une_res_heure.put("date", res_res_heure.getString(2));
+                                                une_res_heure.put("nb_tables", res_res_heure.getInt(3));
+                                                une_res_heure.put("nb_personnes", res_res_heure.getInt(4));
+                                                une_res_heure.put("nom", res_res_heure.getString(5));
+                                                une_res_heure.put("prenom", res_res_heure.getString(6));
+                                                une_res_heure.put("tel", res_res_heure.getString(7));
+                                                tab_res_heure.add(une_res_heure);
+                                            }
+                                            res_heure.put("reservations", tab_res_heure);
+
+
+                                            String sql_tables_heure = "SELECT restaurant.nb_tables, restaurant.nb_tables - COALESCE(SUM(reservation.nb_tables), 0) AS remaining_tables\n" +
+                                                    "FROM restaurant\n" +
+                                                    "LEFT JOIN reservation ON restaurant.id = reservation.id_resto \n" +
+                                                    "AND DATE(reservation.date) = ?\n" +
+                                                    "and hour(reservation.date)>?-2\n" +
+                                                    "and hour(reservation.date)<?+2\n" +
+                                                    "WHERE restaurant.id = ?";
+
+                                            PreparedStatement prep_tables_heure = connect.prepareStatement(sql_tables_heure);
+                                            prep_tables_heure.setString(1, paths.get(4));
+                                            prep_tables_heure.setString(2,paths.get(5));
+                                            prep_tables_heure.setString(3, paths.get(5));
+                                            prep_tables_heure.setInt(4, id);
+                                            prep_tables_heure.execute();
+
+                                            ResultSet res_tables_heure = prep_tables_heure.getResultSet();
+
+
+                                            JSONObject tables = new JSONObject();
+
+                                            while(res_tables_heure.next()){
+                                                tables.put("total_tables", res_tables_heure.getInt(1));
+                                                tables.put("dispo_tables", res_tables_heure.getInt(2));
+                                            }
+
+
+
+                                            res_heure.put("tables", tables);
+
+                                            connect.close();
+                                            return res_heure.toString();
+
+
+
+                                        } catch (NumberFormatException e) {
+
+                                        }
+
+                                    }
+
+
+                                } catch (DateTimeParseException e) {
+                                }
+                            }
+                        } else {
+                            JSONObject id_pas_trouve = new JSONObject();
+                            id_pas_trouve.put("restaurant", "inconnu");
+                            connect.close();
+                            return id_pas_trouve.toString();
+                        }
+                    } catch (NumberFormatException e) {
+                        JSONObject id_non_nombre = new JSONObject();
+                        id_non_nombre.put("restaurant", "inconnu");
+                        connect.close();
+                        return id_non_nombre.toString();
+                    }
+                }
+            }else if (method.equals("POST")){
+
+                JSONParser parser = new JSONParser();
+                try {
+                    JSONObject bodyJson = (JSONObject) parser.parse(new String(body));
+
+                    if(paths.get(1).equals("restaurants") && paths.get(2).equals("reserver")){
+
+                        String restaurant = String.valueOf(bodyJson.get("id_resto"));
+
+                        String date = String.valueOf(bodyJson.get("date"));
+
+                        String heure = String.valueOf(bodyJson.get("heure"));
+
+                        String personnes = String.valueOf(bodyJson.get("personnes"));
+
+                        String nom = String.valueOf(bodyJson.get("nom"));
+
+                        String prenom = String.valueOf(bodyJson.get("prenom"));
+
+                        String tel = String.valueOf(bodyJson.get("tel"));
+
+                        String date_comp = date+" "+heure;
+
+                        int tables = (int) Math.ceil((double) Integer.parseInt(personnes)/4);
+
+                        String sql_reserver = "INSERT INTO `reservation` (`id_reserv`, `id_resto`, `date`, `nb_tables`, `nb_personnes`, `nom`, `prenom`, `tel`) " +
+                                "VALUES (NULL, ?, ?, ?, ?, ?, ?, ?);";
+                        PreparedStatement prep_reserver = connect.prepareStatement(sql_reserver);
+                        prep_reserver.setString(1, restaurant);
+                        prep_reserver.setString(2, date_comp);
+                        prep_reserver.setInt(3, tables);
+                        prep_reserver.setString(4, personnes);
+                        prep_reserver.setString(5, nom);
+                        prep_reserver.setString(6, prenom);
+                        prep_reserver.setString(7, tel);
+
+
+                        try{
+                            prep_reserver.executeUpdate();
+                        }catch (Exception ignored){
+
+                        }
+                        connect.close();
+
+                    }
+                    if(paths.get(1).equals("restaurants") && paths.get(2).equals("ajouterresto")){
+
+                        String nom = bodyJson.get("nom").toString();
+
+                        String adresse = String.valueOf(bodyJson.get("adresse"));
+
+                        String latitude = String.valueOf(bodyJson.get("latitude"));
+
+                        String longitude = String.valueOf(bodyJson.get("longitude"));
+
+                        String nb_tables = String.valueOf(bodyJson.get("nb_tables"));
+
+
+                        String sql_ajouter_resto = "INSERT INTO `restaurant` (`id`, `nom`, `adresse`, `latitude`, `longitude`, `nb_tables`) " +
+                                "VALUES (NULL, ?, ?, ?, ?, ?);";
+                        PreparedStatement prep_ajouter_resto = connect.prepareStatement(sql_ajouter_resto);
+                        prep_ajouter_resto.setString(1, nom);
+                        prep_ajouter_resto.setString(2,adresse);
+                        prep_ajouter_resto.setString(3, latitude);
+                        prep_ajouter_resto.setString(4, longitude);
+                        prep_ajouter_resto.setString(5, nb_tables);
+
+                        try{
+                            prep_ajouter_resto.executeUpdate();
+                        }catch (Exception ignored){
+
+                        }
+
+
+                        connect.close();
+
+                    }
+
+                } catch (ParseException ignored) {
+                }
+            }
+
+            JSONObject retour = new JSONObject();
+            retour.put("reponse", "vide");
+
+            return retour.toString();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JSONObject tets = new JSONObject();
+            tets.put("erreur", "erreur");
+            return tets.toString();
+        }
+
+    }
+}
